@@ -72,11 +72,14 @@ def compute_xy(ref_nodes, d_differences, min_r_error=0.001, max_nr_steps=10):
         print("Error: Arguments 'ref_nodes' and 'd_differences' should have an equal number of rows.")
         return position  # [NaN, NaN]
 
-    # TODO: add check that min(x) != max(x) and min(y) != max(y)
-
     # Make sure enough data are provided to run the TDOA algorithm
     if drows < 3:
         print("Error: At least 3 reference nodes are required to compute a position.")
+        return position  # [NaN, NaN]
+
+    # Check if all reference nodes are colinear
+    if loctools.colinear(ref_nodes):
+        print("Error: Reference nodes .")
         return position  # [NaN, NaN]
 
     # Now we can do the magic (i.e., run the algorithm)
