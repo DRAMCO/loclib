@@ -138,22 +138,31 @@ def colinear(cluster):
     if cshape[1] != 2:
         print("Error: Argument 'cluster' should be an n-by-2 ndarray.")
         return None
-    if cshape[0] != 3:
-        print("Error: Argument 'cluster' should contain at least three points.")
+
+    if np.linalg.matrix_rank(cluster) == 1:
+        return True
+    else:   # first 2 points are on a vertical line
+        return False
+
+
+def coplanar(cluster):
+    # Type check for 'cluster'
+    if type(cluster) is np.ndarray:
+        # get dimensions
+        cshape = cluster.shape
+    else:
+        print("Error: Argument 'cluster' should be an array (np.ndarray).")
         return None
 
-    # Get slope for two first points
-    x = cluster[:, 0]
-    y = cluster[:, 1]
+    # Check 'cluster' dimensions
+    if len(cshape) != 2:
+        print("Error: Argument 'cluster' should be an n-by-3 ndarray.")
+        return None
+    if cshape[1] != 3:
+        print("Error: Argument 'cluster' should be an n-by-3 ndarray.")
+        return None
 
-    if (x[1] - x[0]) != 0:  # first two points are not on a vertical line
-        s = (y[1] - y[0])/(x[1] - x[0])     # slope
-        for i in range(2, len(x)):
-            if y[i] != s * x[i]:
-                return False
+    if np.linalg.matrix_rank(cluster) == 2:
+        return True
     else:   # first 2 points are on a vertical line
-        for i in range(2, len(x)):
-            if x[i] != x[0]:
-                return False
-
-    return True
+        return False

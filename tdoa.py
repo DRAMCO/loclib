@@ -79,8 +79,8 @@ def compute_xy(ref_nodes, d_differences, min_r_error=0.001, max_nr_steps=10):
 
     # Check if all reference nodes are colinear
     if loctools.colinear(ref_nodes):
-        print("Error: Reference nodes .")
-        return position  # [NaN, NaN]
+        print("Warning: Reference nodes are located on the same (straight) line."
+              "This might impact the algorithm's operation.")
 
     # Now we can do the magic (i.e., run the algorithm)
     # Create necessary matrices
@@ -181,12 +181,13 @@ def compute_xyz(ref_nodes, d_differences, min_r_error=0.001, max_nr_steps=10):
         print("Error: Arguments 'ref_nodes' and 'd_differences' should have an equal number of rows.")
         return position  # [NaN, NaN]
 
-    # TODO: add check that min(x) != max(x) and min(y) != max(y) and min(z) != max(z)
-
     # Make sure enough data are provided to run the TDOA algorithm
     if drows < 4:
         print("Error: At least 4 reference nodes are required to compute a position.")
         return position  # [NaN, NaN]
+
+    if loctools.coplanar(ref_nodes):
+        print("Warning: Reference nodes are located in the same plane. This might impact the algorithm's operation.")
 
     # Now we can do the magic (i.e., run the algorithm)
     # Create necessary matrices
